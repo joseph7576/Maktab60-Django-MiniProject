@@ -1,0 +1,17 @@
+{% extends 'weblog/index.html' %}
+{% load static %}
+{% block title %} Category List {% endblock title %}
+
+{% block content %}
+
+{% for cat in object_list %}
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title"><a href="{% url 'weblog:category_detail' cat.id %}">{{cat.title}}<a/></h2>
+        </div>
+    </div>
+
+{% endfor %}
+
+{% endblock content %}

@@ -1,0 +1,19 @@
+{% extends 'weblog/index.html' %}
+{% load static %}
+{% block title %} Post List {% endblock title %}
+
+{% block content %}
+
+{% for post in posts %}
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">{{post.title}}</h2>
+            <p class="card-text">{{post.content}}</p>
+            <a class="btn btn-primary" href="{% url 'weblog:post_detail' post.slug %}">Detail</a>
+        </div>
+    </div>
+
+{% endfor %}
+
+{% endblock content %}

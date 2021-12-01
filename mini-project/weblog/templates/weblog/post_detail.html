@@ -1,0 +1,21 @@
+{% extends 'weblog/index.html' %}
+{% load static %}
+{% block title %} Post Detail {{post.id}} {% endblock title %}
+
+{% block content %}
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h1 class="card-title">Owner: {{post.owner}}</h1>
+            <h2 class="card-title">Title: {{post.title}}</h2><br>
+            <p class="card-text">Content: {{post.content}}</p>
+            <p class="card-text">Created On: {{post.created}}</p>
+            <p class="card-text">Slug: {{post.slug}}</p>
+            <p class="card-text">Comments: </p>
+            {% for comment in post.comment_set.all %}
+                {{comment.comment}} <br>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock content %}
