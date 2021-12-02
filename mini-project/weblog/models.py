@@ -27,6 +27,7 @@ class Post(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Post Owner")
     title = models.CharField("Post Title", max_length=50)
     content = models.TextField()
+    image = models.ImageField(upload_to='images', null=True)
     category = models.ManyToManyField('Category')
     created = models.DateField(auto_now_add=True, null=True)
     updated_on = models.DateTimeField(auto_now=True)
