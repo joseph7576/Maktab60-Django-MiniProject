@@ -6,9 +6,9 @@ from django.db.models.signals import pre_save
 
 User = get_user_model()
 
+# https://studygyaan.com/django/how-to-create-a-unique-slug-in-django
 def random_string_generator(size = 10, chars = string.ascii_lowercase + string.digits): 
     return ''.join(random.choice(chars) for _ in range(size)) 
-  
 def unique_slug_generator(instance, new_slug = None): 
     if new_slug is not None: 
         slug = new_slug 
@@ -38,10 +38,10 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+# TODO: search about pre_save & Django Signals
 def pre_save_receiver(sender, instance, *args, **kwargs): 
    if not instance.slug: 
        instance.slug = unique_slug_generator(instance) 
-
 pre_save.connect(pre_save_receiver, sender = Post) 
 
 class Comment(models.Model):

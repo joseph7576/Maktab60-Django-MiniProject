@@ -7,6 +7,8 @@ urlpatterns = [
     path('posts/', post_list, name='post_list'),
     path("post/<slug:slug>", post_detail, name="post_detail"),
     path("categories/", CategoryList.as_view(), name="category_list"),
-    path("cateogry/<int:pk>", CategoryDetail.as_view(), name="category_detail")
+    path("cateogry/<int:pk>", CategoryDetail.as_view(), name="category_detail"),
+    path('login/', login_form, name='login'),
+    path('register/', register_form, name='register')
 ]
 
