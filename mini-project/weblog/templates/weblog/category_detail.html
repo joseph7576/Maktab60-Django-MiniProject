@@ -1,12 +1,12 @@
 {% extends 'weblog/index.html' %}
 {% load static %}
-{% block title %} Category Detail {{object.id}} {% endblock title %}
+{% block title %} Category Detail {% endblock title %}
 
 {% block content %}
 
     <div class="card mb-4">
         <div class="card-body">
-            <h2 class="card-title">Title: {{object.title}}</h2><br>
+            <h2 class="card-title">Title: {{object.name}}</h2><br>
             <p class="card-text">Posts: </p>
             {% for post in object.post_set.all %}
                 {{post.title}} <br>

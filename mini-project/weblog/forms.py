@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from .models import *
 
 
 class LoginForm(forms.Form):
@@ -22,4 +23,9 @@ class RegisterForm(forms.Form):
         super(RegisterForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'input100'
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = '__all__'
 

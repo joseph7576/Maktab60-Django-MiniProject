@@ -60,7 +60,7 @@ class Category(models.Model):
     updated_on = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return self.title
+        return self.name
     
 class Tag(models.Model):
     name = models.CharField(max_length=30)

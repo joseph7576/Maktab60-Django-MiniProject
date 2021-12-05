@@ -4,14 +4,19 @@
 
 {% block content %}
 
-{% for cat in object_list %}
+    <a href="{% url 'weblog:category_create' %}" class="btn btn-info mb-5" role="button">Create Category</a>
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="card-title"><a href="{% url 'weblog:category_detail' cat.id %}">{{cat.title}}<a/></h2>
+    {% for cat in object_list %}
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><a href="{% url 'weblog:category_detail' cat.id %}">{{cat.name}}<a/></h2>
+                <br>
+                <a href="{% url 'weblog:category_edit' id=cat.id %} " class="btn btn-primary" role="button">Edit</a>
+                <a href="{% url 'weblog:category_delete' id=cat.id %} " class="btn btn-danger" role="button">Delete</a>
+            </div>
         </div>
-    </div>
 
-{% endfor %}
+    {% endfor %}
 
 {% endblock content %}

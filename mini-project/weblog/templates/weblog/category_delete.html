@@ -1,0 +1,17 @@
+{% extends 'weblog/index.html' %}
+{% load static %}
+{% block title %} Category Delete {% endblock title %}
+
+{% block content %}
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="" method="post">{% csrf_token %}
+                <p class="card-text">Are you sure you want to delete "{{ category }}"?</p>
+                <input type="submit" class="btn btn-primary" value="Yes"/>
+                <a href="{% url 'weblog:category_list' %}" class="btn btn-dark" role="button">Back</a>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}

@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib import messages
 from django.views.generic import ListView, DetailView
@@ -55,6 +55,7 @@ def logout_view(request):
     return redirect(reverse('weblog:test'))
     
 def register_view(request):
+
     form = RegisterForm(None or request.POST)
     if request.method == "POST":
         if form.is_valid():
@@ -68,6 +69,38 @@ def register_view(request):
                                        username=username,
                                        email=email,
                                        password=password)
+            messages.info(request, f"You have successfully registered as {username}.", extra_tags='success')
             return redirect(reverse('weblog:login'))
     
     return render(request, 'login/register.html', {'form':form})
+
+def delete_category(request, id):
+    category = get_object_or_404(Category, id=id)
+
+    if request.method == 'POST':
+        category.delete()
+        messages.info(request, f"Category deleted successfully.", extra_tags='success')
+        return redirect(reverse('weblog:category_list'))
+    
+    return render(request, 'weblog/category_delete.html', {'category': category})
+
+def edit_category(request, id):
+    category = get_object_or_404(Category, id=id)
+    form = CategoryForm(request.POST or None,instance=category)
+    
+    if form.is_valid():
+        form.save()
+        messages.info(request, f"Category updated successfully.", extra_tags='success')
+        return redirect(reverse('weblog:category_list'))
+
+    return render(request, 'weblog/category_edit.html', {'form': form })
+
+def create_category(request):
+    form = CategoryForm(request.POST or None)
+
+    if form.is_valid():
+        form.save()
+        messages.info(request, f"Category created successfully.", extra_tags='success')
+        return redirect(reverse('weblog:category_list'))
+
+    return render(request, 'weblog/category_create.html', {'form': form})
