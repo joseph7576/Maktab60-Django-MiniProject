@@ -1,6 +1,6 @@
 {% extends 'weblog/index.html' %}
 {% load static %}
-{% block title %} Category Create {% endblock title %}
+{% block title %} Tag Edit {% endblock title %}
 
 {% block content %}
 
@@ -8,7 +8,7 @@
         <div class="card-body">
             <form action="" method="post">{% csrf_token %}
                 {{ form }}
-                <input type="submit" class="btn btn-primary" value="Create"/>
+                <input type="submit" class="btn btn-primary" value="Done"/>
             </form>
         </div>
     </div>

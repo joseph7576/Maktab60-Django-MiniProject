@@ -28,6 +28,9 @@ class CategoryDetail(DetailView):
 class TagList(ListView):
     model = Tag
 
+class TagDetail(DetailView):
+    model = Tag
+
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -104,3 +107,35 @@ def create_category(request):
         return redirect(reverse('weblog:category_list'))
 
     return render(request, 'weblog/category_create.html', {'form': form})
+
+
+def delete_tag(request, id):
+    tag = get_object_or_404(Tag, id=id)
+
+    if request.method == 'POST':
+        tag.delete()
+        messages.info(request, f"Tag deleted successfully.", extra_tags='success')
+        return redirect(reverse('weblog:tag_list'))
+    
+    return render(request, 'weblog/tag_delete.html', {'tag': tag})
+
+def edit_tag(request, id):
+    tag = get_object_or_404(Tag, id=id)
+    form = TagForm(request.POST or None,instance=tag)
+    
+    if form.is_valid():
+        form.save()
+        messages.info(request, f"Tag updated successfully.", extra_tags='success')
+        return redirect(reverse('weblog:tag_list'))
+
+    return render(request, 'weblog/tag_edit.html', {'form': form })
+
+def create_tag(request):
+    form = TagForm(request.POST or None)
+
+    if form.is_valid():
+        form.save()
+        messages.info(request, f"Tag created successfully.", extra_tags='success')
+        return redirect(reverse('weblog:tag_list'))
+
+    return render(request, 'weblog/tag_create.html', {'form': form})

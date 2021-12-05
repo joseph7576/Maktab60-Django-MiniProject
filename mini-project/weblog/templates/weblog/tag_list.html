@@ -1,0 +1,22 @@
+{% extends 'weblog/index.html' %}
+{% load static %}
+{% block title %} Tag List {% endblock title %}
+
+{% block content %}
+
+    <a href="{% url 'weblog:tag_create' %}" class="btn btn-info mb-5" role="button">Create Tag</a>
+
+    {% for tag in object_list %}
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><a href="{% url 'weblog:tag_detail' tag.id %}">{{tag.name}}<a/></h2>
+                <br>
+                <a href="{% url 'weblog:tag_edit' id=tag.id %} " class="btn btn-primary" role="button">Edit</a>
+                <a href="{% url 'weblog:tag_delete' id=tag.id %} " class="btn btn-danger" role="button">Delete</a>
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock content %}
