@@ -25,6 +25,11 @@ class RegisterForm(forms.Form):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'input100'
 
+# class UserForm(forms.ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ['first_name', 'last_name', 'username', 'email']
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
@@ -34,3 +39,8 @@ class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = '__all__'
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['owner', 'title', 'content', 'image', 'category', 'tag']

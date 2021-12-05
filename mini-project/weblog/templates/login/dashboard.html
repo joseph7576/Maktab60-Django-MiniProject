@@ -1,0 +1,34 @@
+{% extends 'weblog/index.html' %}
+{% load static %}
+{% block title %} Dashboard {% endblock title %}
+
+{% block content %}
+
+    username: {{user}} <br>
+    firstname: {{user.first_name}} <br>
+    lastname: {{user.last_name}} <br>
+    email :{{user.email}} <br>
+
+    {% if posts %}
+    
+        {% for post in posts %}
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">{{post.title}}</h2>
+                <p class="card-text">{{post.content}}</p>
+                <a class="btn btn-primary" href="{% url 'weblog:post_detail' post.slug %}">Detail</a>
+            </div>
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <a href="{% url 'weblog:post_create' %}" class="btn btn-info mb-5" role="button">Create Post</a>
+    
+    {% endif %}
+
+    
+
+{% endblock content %}

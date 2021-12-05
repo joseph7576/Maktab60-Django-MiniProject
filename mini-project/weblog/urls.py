@@ -3,10 +3,11 @@ from .views import *
 
 app_name = 'weblog'
 urlpatterns = [
-    path('', test_index, name='test'),
+    path('', post_list, name='home'),
     
     path('posts/', post_list, name='post_list'),
     path("post/<slug:slug>", post_detail, name="post_detail"),
+    path('post_create/', post_create, name='post_create'),
 
     path('tags/', TagList.as_view(), name='tag_list'),
     path("tag/<int:pk>", TagDetail.as_view(), name="tag_detail"),
@@ -21,6 +22,7 @@ urlpatterns = [
     path('category_edit/<int:id>', edit_category, name='category_edit'),
     path('category_create/', create_category, name='category_create'),
 
+    path('dashboard/', dashboard_view, name='dashboard'),
     path('login/', login_view, name='login'),
     path('register/', register_view, name='register'),
     path('logout/', logout_view, name='logout'),

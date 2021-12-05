@@ -1,0 +1,16 @@
+{% extends 'weblog/index.html' %}
+{% load static %}
+{% block title %} Post Create {% endblock title %}
+
+{% block content %}
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form enctype="multipart/form-data" action="{% url 'weblog:post_create' %}" method="post">{% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-primary" value="Create"/>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}

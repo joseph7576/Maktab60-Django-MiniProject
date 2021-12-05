@@ -6,8 +6,19 @@ from django.views.generic import ListView, DetailView
 from .models import *
 from .forms import *
 
-def test_index(request):
-    return render(request, 'weblog/index.html')
+def post_create(request):
+    if request.method == 'POST':
+        print(request.FILES)
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.info(request, f"Post created successfully.", extra_tags='success')
+            return redirect(reverse('weblog:dashboard'))
+    else:
+        form = PostForm()
+
+    return render(request, 'weblog/post_create.html',{'form': form})
+
 
 def post_list(request):
     posts = Post.objects.all()
@@ -31,6 +42,12 @@ class TagList(ListView):
 class TagDetail(DetailView):
     model = Tag
 
+def dashboard_view(request):
+    user = request.user
+    posts = Post.objects.filter(owner=user)
+    context = {'user': user, 'posts': posts}
+    return render(request, 'login/dashboard.html', context=context)
+
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -41,7 +58,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.", extra_tags='success')
-                return redirect(reverse('weblog:test'))
+                return redirect(reverse('weblog:dashboard'))
             else:
                 messages.error(request,"Invalid username or password.", extra_tags='danger')
         else:
@@ -55,7 +72,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.info(request, "You have successfully logged out.",  extra_tags='success')
-    return redirect(reverse('weblog:test'))
+    return redirect(reverse('weblog:home'))
     
 def register_view(request):
 
@@ -76,6 +93,7 @@ def register_view(request):
             return redirect(reverse('weblog:login'))
     
     return render(request, 'login/register.html', {'form':form})
+
 
 def delete_category(request, id):
     category = get_object_or_404(Category, id=id)
