@@ -1,7 +1,7 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.contrib import messages
 from django.views.generic import ListView, DetailView
 from .models import *
 from .forms import *
@@ -28,7 +28,7 @@ class CategoryDetail(DetailView):
 class TagList(ListView):
     model = Tag
 
-def login_form(request):
+def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -37,14 +37,24 @@ def login_form(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+                messages.info(request, f"You are now logged in as {username}.", extra_tags='success')
                 return redirect(reverse('weblog:test'))
+            else:
+                messages.error(request,"Invalid username or password.", extra_tags='danger')
+        else:
+            messages.error(request,"Invalid username or password.", extra_tags='danger')
 
     else:
         form = LoginForm()
 
     return render(request, 'login/login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    messages.info(request, "You have successfully logged out.",  extra_tags='success')
+    return redirect(reverse('weblog:test'))
     
-def register_form(request):
+def register_view(request):
     form = RegisterForm(None or request.POST)
     if request.method == "POST":
         if form.is_valid():
