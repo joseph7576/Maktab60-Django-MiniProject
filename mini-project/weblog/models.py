@@ -23,7 +23,24 @@ def unique_slug_generator(instance, new_slug = None):
         return unique_slug_generator(instance, new_slug = new_slug) 
     return slug 
 
+class PublishedPostsManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status='PU')
+
+class DraftPostsManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status='DR')
+
 class Post(models.Model):
+    
+    PU = 'PU'
+    DR = 'DR'
+
+    STATUS_CHOICE = [
+        (PU, 'Published'),
+        (DR, 'Draft')
+    ]
+    
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Post Owner")
     title = models.CharField("Post Title", max_length=50)
     content = models.TextField()
@@ -32,8 +49,18 @@ class Post(models.Model):
     created = models.DateField(auto_now_add=True, null=True)
     updated_on = models.DateTimeField(auto_now=True)
     like = models.IntegerField(default=0)
+    dislike = models.IntegerField(default=0)
     tag = models.ManyToManyField('Tag')
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
+    status = models.CharField(
+        max_length=2,
+        choices=STATUS_CHOICE,
+        default=DR
+    )
+
+    objects = models.Manager()
+    published = PublishedPostsManager()
+    draft = DraftPostsManager()
 
     def __str__(self):
         return self.title
@@ -49,6 +76,7 @@ class Comment(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Comment Owner", null=True)
     text = models.TextField()
     like = models.IntegerField(default=0)
+    dislike = models.IntegerField(default=0)
     updated_on = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
