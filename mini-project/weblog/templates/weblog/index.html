@@ -25,6 +25,7 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'weblog:post_list' %}">Post List</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'weblog:category_list' %}">Category List</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'weblog:tag_list' %}">Tag List</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'weblog:contact' %}">Contact Us</a></li>
                     </ul>
                 </div>
                 <form class="form-inline" action="{% url 'weblog:search_index' %}" method="post">{% csrf_token %}

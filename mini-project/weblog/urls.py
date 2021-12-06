@@ -35,5 +35,9 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('register/', register_view, name='register'),
     path('logout/', logout_view, name='logout'),
+
+    path("password_reset", password_reset_request, name="password_reset"),
+
+    path("contact", contact, name="contact"),
 ]
 
