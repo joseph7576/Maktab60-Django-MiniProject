@@ -4,6 +4,8 @@ from .views import *
 app_name = 'weblog'
 urlpatterns = [
     path('', post_list, name='home'),
+
+    path('search/', search_index, name='search_index'),
     
     path('posts/', post_list, name='post_list'),
     path("post/<slug:slug>", post_detail, name="post_detail"),

@@ -3,8 +3,20 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib import messages
 from django.views.generic import ListView, DetailView
+from django.db.models import Q
 from .models import *
 from .forms import *
+
+def search_index(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        posts = Post.objects.filter(Q(title__icontains=searched) | Q(content__icontains=searched))
+        context = {'searched': searched, 'posts':posts}
+        return render(request, 'weblog/search_index.html', context=context)
+    
+    else:
+        return render(request, 'weblog/search_index.html')
+
 
 def post_create(request):
     if request.method == 'POST':
