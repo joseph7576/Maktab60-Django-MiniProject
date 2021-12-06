@@ -48,8 +48,8 @@ class Post(models.Model):
     category = models.ManyToManyField('Category')
     created = models.DateField(auto_now_add=True, null=True)
     updated_on = models.DateTimeField(auto_now=True)
-    like = models.IntegerField(default=0)
-    dislike = models.IntegerField(default=0)
+    like = models.ManyToManyField(User, related_name='post_like')
+    dislike = models.ManyToManyField(User, related_name='post_dislike')
     tag = models.ManyToManyField('Tag')
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
     status = models.CharField(
@@ -61,6 +61,12 @@ class Post(models.Model):
     objects = models.Manager()
     published = PublishedPostsManager()
     draft = DraftPostsManager()
+
+    def total_likes(self):
+        return self.like.count()
+
+    def total_dislikes(self):
+        return self.dislike.count()
 
     def __str__(self):
         return self.title
@@ -75,9 +81,17 @@ class Comment(models.Model):
     post = models.ForeignKey(Post,on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Comment Owner", null=True)
     text = models.TextField()
-    like = models.IntegerField(default=0)
-    dislike = models.IntegerField(default=0)
+    like = models.ManyToManyField(User, related_name='comment_like')
+    dislike = models.ManyToManyField(User, related_name='comment_dislike')
     updated_on = models.DateTimeField(auto_now=True, null=True)
+
+    @property
+    def total_likes(self):
+        return self.like.count()
+
+    @property
+    def total_dislikes(self):
+        return self.dislike.count()
 
     def __str__(self):
         return f'Comment of User:{self.owner} on Post:{self.post}'

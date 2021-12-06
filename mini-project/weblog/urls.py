@@ -6,6 +6,8 @@ urlpatterns = [
     path('', post_list, name='home'),
 
     path('search/', search_index, name='search_index'),
+
+    path('post_like/<slug:slug>', post_like, name='post_like'),
     
     path('posts/', post_list, name='post_list'),
     path("post/<slug:slug>", post_detail, name="post_detail"),
@@ -14,6 +16,7 @@ urlpatterns = [
     path('post_delete/<slug:slug>', post_delete, name='post_delete'),
 
     path('create_comment/', create_comment, name='create_comment'),
+    path('comment_like/<int:id>', comment_like, name='comment_like'), # TODO: Not Working!
 
     path('tags/', TagList.as_view(), name='tag_list'),
     path("tag/<int:pk>", TagDetail.as_view(), name="tag_detail"),

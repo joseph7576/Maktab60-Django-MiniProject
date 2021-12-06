@@ -11,10 +11,24 @@
             <p class="card-text">Content: {{post.content}}</p>
             <p class="card-text">Created On: {{post.created}}</p>
             <p class="card-text">Slug: {{post.slug}}</p>
+            {% if user.is_authenticated %}
+            <form action="{% url 'weblog:post_like' post.slug %}" method="post">{% csrf_token %}
+                <button class="btn btn-success btn-sm" type="submit" name="post_like" value="{{post.slug}}">Like - {{total_likes}}</button>
+                <button class="btn btn-danger btn-sm" type="submit" name="post_dislike" value="{{post.slug}}">Dislike - {{total_dislikes}}</button>
+            <form/>
+            {% endif %}
+            <hr/>
             <p class="card-text">Comments: </p>
             {% for comment in post.comment_set.all %}
                 {{comment.owner}} <br>
                 {{comment.text}} <br>
+                {% if user.is_authenticated %}
+                <form action="{% url 'weblog:comment_like' comment.id %}" method="post">{% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn btn-success btn-sm" type="submit" name="comment_like" value="{{comment.id}}">Like - {{ comment.total_likes }}</button>
+                    <button class="btn btn-danger btn-sm" type="submit" name="commnet_dislike" value="{{comment.id}}">Dislike - {{ comment.total_dislikes }}</button>
+                <form/>
+                {% endif %}
                 <hr>
             {% endfor %}
         </div>

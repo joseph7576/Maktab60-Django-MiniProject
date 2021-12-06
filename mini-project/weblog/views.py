@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 from .models import *
 from .forms import *
 
@@ -16,6 +17,16 @@ def search_index(request):
     
     else:
         return render(request, 'weblog/search_index.html')
+
+def post_like(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    
+    if 'post_like' in request.POST:
+        post.like.add(request.user)
+    elif 'post_dislike' in request.POST:
+        post.dislike.add(request.user)
+    
+    return redirect(reverse('weblog:post_detail', args=[slug]))
 
 
 def post_create(request):
@@ -61,9 +72,11 @@ def post_list(request):
     return render(request, 'weblog/post_list.html', context=context)
 
 def post_detail(request, slug):
-    post = Post.objects.get(slug=slug)
+    post = get_object_or_404(Post, slug=slug)
     form = CommentForm()
-    context = {'post': post, 'form': form}
+    total_likes = post.total_likes()
+    total_dislikes = post.total_dislikes()
+    context = {'post': post, 'form': form, 'total_likes':total_likes, 'total_dislikes':total_dislikes}
     return render(request, 'weblog/post_detail.html', context=context)
 
 def create_comment(request):
@@ -78,6 +91,22 @@ def create_comment(request):
             form.save()
             messages.info(request, f"Comment created successfully.", extra_tags='success')
             return redirect(reverse('weblog:post_list'))
+
+# TODO: Handle Comment Like - Multiple Form Mechanism
+def comment_like(request, id):
+    comment = get_object_or_404(Comment, id=id)
+
+    print("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHhh")
+    print(id)
+    print(request.POST)
+    if 'comment_like' in request.POST:
+        comment.like.add(request.user)
+    elif 'comment_dislike' in request.POST:
+        comment.dislike.add(request.user)
+    
+    # redirect to the previous page :D
+    next = request.POST.get('next', '/')
+    return HttpResponseRedirect(next)
 
 
 class CategoryList(ListView):
