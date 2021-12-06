@@ -13,9 +13,21 @@
             <p class="card-text">Slug: {{post.slug}}</p>
             <p class="card-text">Comments: </p>
             {% for comment in post.comment_set.all %}
-                {{comment.comment}} <br>
+                {{comment.owner}} <br>
+                {{comment.text}} <br>
+                <hr>
             {% endfor %}
         </div>
     </div>
+
+    {% if user.is_authenticated %}
+
+        <form action="{% url 'weblog:create_comment' %}" method="post">{% csrf_token %}
+            <input type="hidden" name="post_slug" value="{{ post.slug }}" />
+            {{ form.as_p }}
+            <input type="submit" class="btn btn-primary" value="Comment"/>
+        </form>
+
+    {% endif %}
 
 {% endblock content %}

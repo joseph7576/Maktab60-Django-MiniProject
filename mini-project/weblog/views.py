@@ -50,8 +50,23 @@ def post_list(request):
 
 def post_detail(request, slug):
     post = Post.objects.get(slug=slug)
-    context = {'post': post}
+    form = CommentForm()
+    context = {'post': post, 'form': form}
     return render(request, 'weblog/post_detail.html', context=context)
+
+def create_comment(request):
+    if request.method == 'POST':
+        post_slug = request.POST.get('post_slug')
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = Post.objects.get(slug=post_slug)
+            comment.owner = request.user
+            comment.save()
+            form.save()
+            messages.info(request, f"Comment created successfully.", extra_tags='success')
+            return redirect(reverse('weblog:post_list'))
+
 
 class CategoryList(ListView):
     model = Category
