@@ -8,6 +8,8 @@ urlpatterns = [
     path('posts/', post_list, name='post_list'),
     path("post/<slug:slug>", post_detail, name="post_detail"),
     path('post_create/', post_create, name='post_create'),
+    path('post_edit/<slug:slug>', post_edit, name='post_edit'),
+    path('post_delete/<slug:slug>', post_delete, name='post_delete'),
 
     path('tags/', TagList.as_view(), name='tag_list'),
     path("tag/<int:pk>", TagDetail.as_view(), name="tag_detail"),

@@ -11,7 +11,10 @@ def post_create(request):
         print(request.FILES)
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.owner = request.user
+            post.save()
+            form.save_m2m()
             messages.info(request, f"Post created successfully.", extra_tags='success')
             return redirect(reverse('weblog:dashboard'))
     else:
@@ -19,6 +22,26 @@ def post_create(request):
 
     return render(request, 'weblog/post_create.html',{'form': form})
 
+def post_edit(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    form = PostForm(request.POST or None, instance=post)
+
+    if form.is_valid():
+        form.save()
+        messages.info(request, f"Post updated successfully.", extra_tags='success')
+        return redirect(reverse('weblog:post_list'))
+
+    return render(request, 'weblog/post_edit.html', {'form': form })
+
+def post_delete(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+
+    if request.method == 'POST':
+        post.delete()
+        messages.info(request, f"Post deleted successfully.", extra_tags='success')
+        return redirect(reverse('weblog:post_list'))
+    
+    return render(request, 'weblog/post_delete.html', {'post': post})
 
 def post_list(request):
     posts = Post.objects.all()

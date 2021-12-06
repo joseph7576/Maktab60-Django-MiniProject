@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.forms import fields
+from django.forms import fields, widgets
+from django.http import request
 from .models import *
 
 
@@ -41,6 +42,12 @@ class TagForm(forms.ModelForm):
         fields = '__all__'
 
 class PostForm(forms.ModelForm):
+    title = forms.CharField()
+    content = forms.CharField(widget=forms.Textarea)
+    image = forms.ImageField()
+    category = forms.ModelMultipleChoiceField(queryset=Category.objects)
+    tag = forms.ModelMultipleChoiceField(queryset=Tag.objects, required=False)
+
     class Meta:
         model = Post
-        fields = ['owner', 'title', 'content', 'image', 'category', 'tag']
+        fields = ['title', 'content', 'image', 'category', 'tag']
