@@ -23,6 +23,9 @@ def unique_slug_generator(instance, new_slug = None):
         return unique_slug_generator(instance, new_slug = new_slug) 
     return slug 
 
+
+### post model
+# custom manager for post
 class PublishedPostsManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status='PU')
@@ -58,6 +61,7 @@ class Post(models.Model):
         default=DR
     )
 
+    # config managers
     objects = models.Manager()
     published = PublishedPostsManager()
     draft = DraftPostsManager()
@@ -71,12 +75,15 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+### create unique slug for post
 # TODO: search about pre_save & Django Signals
 def pre_save_receiver(sender, instance, *args, **kwargs): 
    if not instance.slug: 
        instance.slug = unique_slug_generator(instance) 
 pre_save.connect(pre_save_receiver, sender = Post) 
 
+
+# comment model
 class Comment(models.Model):
     post = models.ForeignKey(Post,on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Comment Owner", null=True)
@@ -95,7 +102,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment of User:{self.owner} on Post:{self.post}'
-    
+
+
+# category model
 class Category(models.Model):
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField('Category Name', max_length=30, null=True)
@@ -103,7 +112,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
+# tag model   
 class Tag(models.Model):
     name = models.CharField(max_length=30)
     updated_on = models.DateTimeField(auto_now=True)
