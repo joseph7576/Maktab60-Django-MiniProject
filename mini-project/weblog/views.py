@@ -78,7 +78,7 @@ def search_index(request):
 def post_list(request):
     posts = Post.objects.all()
     context = {'posts': posts}
-    return render(request, 'weblog/post_list.html', context=context)
+    return render(request, 'weblog/post/post_list.html', context=context)
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
@@ -86,7 +86,7 @@ def post_detail(request, slug):
     total_likes = post.total_likes()
     total_dislikes = post.total_dislikes()
     context = {'post': post, 'form': form, 'total_likes':total_likes, 'total_dislikes':total_dislikes}
-    return render(request, 'weblog/post_detail.html', context=context)
+    return render(request, 'weblog/post/post_detail.html', context=context)
 
 def post_create(request):
     if request.method == 'POST':
@@ -103,7 +103,7 @@ def post_create(request):
     else:
         form = PostForm()
 
-    return render(request, 'weblog/post_create.html',{'form': form})
+    return render(request, 'weblog/post/post_create.html',{'form': form})
 
 def post_edit(request, slug):
     post = get_object_or_404(Post, slug=slug)
@@ -114,7 +114,7 @@ def post_edit(request, slug):
         messages.info(request, f"Post updated successfully.", extra_tags='success')
         return redirect(reverse('weblog:post_list'))
 
-    return render(request, 'weblog/post_edit.html', {'form': form })
+    return render(request, 'weblog/post/post_edit.html', {'form': form })
 
 def post_delete(request, slug):
     post = get_object_or_404(Post, slug=slug)
@@ -124,7 +124,7 @@ def post_delete(request, slug):
         messages.info(request, f"Post deleted successfully.", extra_tags='success')
         return redirect(reverse('weblog:post_list'))
     
-    return render(request, 'weblog/post_delete.html', {'post': post})
+    return render(request, 'weblog/post/post_delete.html', {'post': post})
 
 def post_stuff(request, slug):
     post = get_object_or_404(Post, slug=slug)
@@ -166,9 +166,11 @@ def post_stuff(request, slug):
 ##### category stuff
 class CategoryList(ListView):
     model = Category
+    template_name = 'weblog/category/category_list.html'
 
 class CategoryDetail(DetailView):
     model = Category
+    template_name = 'weblog/category/category_detail.html'
 
 def category_delete(request, id):
     category = get_object_or_404(Category, id=id)
@@ -178,7 +180,7 @@ def category_delete(request, id):
         messages.info(request, f"Category deleted successfully.", extra_tags='success')
         return redirect(reverse('weblog:category_list'))
     
-    return render(request, 'weblog/category_delete.html', {'category': category})
+    return render(request, 'weblog/category/category_delete.html', {'category': category})
 
 def category_edit(request, id):
     category = get_object_or_404(Category, id=id)
@@ -189,7 +191,7 @@ def category_edit(request, id):
         messages.info(request, f"Category updated successfully.", extra_tags='success')
         return redirect(reverse('weblog:category_list'))
 
-    return render(request, 'weblog/category_edit.html', {'form': form })
+    return render(request, 'weblog/category/category_edit.html', {'form': form })
 
 def category_create(request):
     form = CategoryForm(request.POST or None)
@@ -199,15 +201,17 @@ def category_create(request):
         messages.info(request, f"Category created successfully.", extra_tags='success')
         return redirect(reverse('weblog:category_list'))
 
-    return render(request, 'weblog/category_create.html', {'form': form})
+    return render(request, 'weblog/category/category_create.html', {'form': form})
 
 
 ##### tag stuff
 class TagList(ListView):
     model = Tag
+    template_name = 'weblog/tag/tag_list.html'
 
 class TagDetail(DetailView):
     model = Tag
+    template_name = 'weblog/tag/tag_detail.html'
 
 def tag_delete(request, id):
     tag = get_object_or_404(Tag, id=id)
@@ -217,7 +221,7 @@ def tag_delete(request, id):
         messages.info(request, f"Tag deleted successfully.", extra_tags='success')
         return redirect(reverse('weblog:tag_list'))
     
-    return render(request, 'weblog/tag_delete.html', {'tag': tag})
+    return render(request, 'weblog/tag/tag_delete.html', {'tag': tag})
 
 def tag_edit(request, id):
     tag = get_object_or_404(Tag, id=id)
@@ -228,7 +232,7 @@ def tag_edit(request, id):
         messages.info(request, f"Tag updated successfully.", extra_tags='success')
         return redirect(reverse('weblog:tag_list'))
 
-    return render(request, 'weblog/tag_edit.html', {'form': form })
+    return render(request, 'weblog/tag/tag_edit.html', {'form': form })
 
 def tag_create(request):
     form = TagForm(request.POST or None)
@@ -238,7 +242,7 @@ def tag_create(request):
         messages.info(request, f"Tag created successfully.", extra_tags='success')
         return redirect(reverse('weblog:tag_list'))
 
-    return render(request, 'weblog/tag_create.html', {'form': form})
+    return render(request, 'weblog/tag/tag_create.html', {'form': form})
 
 
 
