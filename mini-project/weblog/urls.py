@@ -20,16 +20,16 @@ urlpatterns = [
 
     path('tags/', TagList.as_view(), name='tag_list'),
     path("tag/<int:pk>", TagDetail.as_view(), name="tag_detail"),
-    path("tag_delete/<int:id>", delete_tag, name="tag_delete"),
-    path('tag_edit/<int:id>', edit_tag, name='tag_edit'),
-    path('tag_create/', create_tag, name='tag_create'),
+    path("tag_delete/<int:id>", tag_delete, name="tag_delete"),
+    path('tag_edit/<int:id>', tag_edit, name='tag_edit'),
+    path('tag_create/', tag_create, name='tag_create'),
 
 
     path("categories/", CategoryList.as_view(), name="category_list"),
     path("category/<int:pk>", CategoryDetail.as_view(), name="category_detail"),
-    path("category_delete/<int:id>", delete_category, name="category_delete"),
-    path('category_edit/<int:id>', edit_category, name='category_edit'),
-    path('category_create/', create_category, name='category_create'),
+    path("category_delete/<int:id>", category_delete, name="category_delete"),
+    path('category_edit/<int:id>', category_edit, name='category_edit'),
+    path('category_create/', category_create, name='category_create'),
 
     path('dashboard/', dashboard_view, name='dashboard'),
     path('login/', login_view, name='login'),

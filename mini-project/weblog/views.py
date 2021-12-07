@@ -57,7 +57,6 @@ def post_stuff(request, slug):
     next = request.POST.get('next', '/')
     return HttpResponseRedirect(next)
 
-
 def post_create(request):
     if request.method == 'POST':
         print(request.FILES)
@@ -68,7 +67,8 @@ def post_create(request):
             post.save()
             form.save_m2m()
             messages.info(request, f"Post created successfully.", extra_tags='success')
-            return redirect(reverse('weblog:dashboard'))
+            next = request.POST.get('next', '/')
+            return HttpResponseRedirect(next)
     else:
         form = PostForm()
 
@@ -81,7 +81,8 @@ def post_edit(request, slug):
     if form.is_valid():
         form.save()
         messages.info(request, f"Post updated successfully.", extra_tags='success')
-        return redirect(reverse('weblog:post_list'))
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
 
     return render(request, 'weblog/post_edit.html', {'form': form })
 
@@ -107,21 +108,6 @@ def post_detail(request, slug):
     total_dislikes = post.total_dislikes()
     context = {'post': post, 'form': form, 'total_likes':total_likes, 'total_dislikes':total_dislikes}
     return render(request, 'weblog/post_detail.html', context=context)
-
-def create_comment(request):
-    if request.method == 'POST':
-        post_slug = request.POST.get('post_slug')
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = Post.objects.get(slug=post_slug)
-            comment.owner = request.user
-            comment.save()
-            form.save()
-            messages.info(request, f"Comment created successfully.", extra_tags='success')
-            next = request.POST.get('next', '/')
-            return HttpResponseRedirect(next)
-            # return redirect(reverse('weblog:post_list'))
 
 class CategoryList(ListView):
     model = Category
@@ -188,7 +174,7 @@ def register_view(request):
     return render(request, 'login/register.html', {'form':form})
 
 
-def delete_category(request, id):
+def category_delete(request, id):
     category = get_object_or_404(Category, id=id)
 
     if request.method == 'POST':
@@ -198,29 +184,31 @@ def delete_category(request, id):
     
     return render(request, 'weblog/category_delete.html', {'category': category})
 
-def edit_category(request, id):
+def category_edit(request, id):
     category = get_object_or_404(Category, id=id)
     form = CategoryForm(request.POST or None,instance=category)
     
     if form.is_valid():
         form.save()
         messages.info(request, f"Category updated successfully.", extra_tags='success')
-        return redirect(reverse('weblog:category_list'))
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
 
     return render(request, 'weblog/category_edit.html', {'form': form })
 
-def create_category(request):
+def category_create(request):
     form = CategoryForm(request.POST or None)
 
     if form.is_valid():
         form.save()
         messages.info(request, f"Category created successfully.", extra_tags='success')
-        return redirect(reverse('weblog:category_list'))
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
 
     return render(request, 'weblog/category_create.html', {'form': form})
 
 
-def delete_tag(request, id):
+def tag_delete(request, id):
     tag = get_object_or_404(Tag, id=id)
 
     if request.method == 'POST':
@@ -230,24 +218,26 @@ def delete_tag(request, id):
     
     return render(request, 'weblog/tag_delete.html', {'tag': tag})
 
-def edit_tag(request, id):
+def tag_edit(request, id):
     tag = get_object_or_404(Tag, id=id)
     form = TagForm(request.POST or None,instance=tag)
     
     if form.is_valid():
         form.save()
         messages.info(request, f"Tag updated successfully.", extra_tags='success')
-        return redirect(reverse('weblog:tag_list'))
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
 
     return render(request, 'weblog/tag_edit.html', {'form': form })
 
-def create_tag(request):
+def tag_create(request):
     form = TagForm(request.POST or None)
 
     if form.is_valid():
         form.save()
         messages.info(request, f"Tag created successfully.", extra_tags='success')
-        return redirect(reverse('weblog:tag_list'))
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
 
     return render(request, 'weblog/tag_create.html', {'form': form})
 
