@@ -12,11 +12,15 @@
             <p class="card-text">Created On: {{post.created}}</p>
             <p class="card-text">Slug: {{post.slug}}</p>
             {% if user.is_authenticated %}
-            <form action="{% url 'weblog:post_like' post.slug %}" method="post">{% csrf_token %}
+            <form action="{% url 'weblog:post_stuff' post.slug %}" method="post">{% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.path }}">
                 <button class="btn btn-success btn-sm" type="submit" name="post_like" value="{{post.slug}}">Like - {{total_likes}}</button>
                 <button class="btn btn-danger btn-sm" type="submit" name="post_dislike" value="{{post.slug}}">Dislike - {{total_dislikes}}</button>
             <form/>
+
+            {% else %}
+                <button class="btn btn-success btn-sm" >Like - {{total_likes}}</button>
+                <button class="btn btn-danger btn-sm" >Dislike - {{total_dislikes}}</button>
             {% endif %}
             <hr/>
             <p class="card-text">Comments: </p>
@@ -24,12 +28,14 @@
                 {{comment.owner}} <br>
                 {{comment.text}} <br>
                 {% if user.is_authenticated %}
-                <form action="{% url 'weblog:comment_like' comment.id %}" method="post">{% csrf_token %}
-                    <input type="hidden" name="next" value="{{ request.path }}">
-                    {% comment %} <input type="hidden" name="comment_id" value="{{ comment.id }}"> {% endcomment %}
+                <form action="" method="post">{% csrf_token %}
                     <button class="btn btn-success btn-sm" type="submit" name="comment_like" value="{{comment.id}}">Like - {{ comment.total_likes }}</button>
                     <button class="btn btn-danger btn-sm" type="submit" name="comment_dislike" value="{{comment.id}}">Dislike - {{ comment.total_dislikes }}</button>
                 <form/>
+
+                {% else %}
+                    <button class="btn btn-success btn-sm">Like - {{ comment.total_likes }}</button>
+                    <button class="btn btn-danger btn-sm">Dislike - {{ comment.total_dislikes }}</button>
                 {% endif %}
                 <hr>
             {% endfor %}
@@ -38,9 +44,7 @@
 
     {% if user.is_authenticated %}
 
-        <form action="{% url 'weblog:create_comment' %}" method="post">{% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.path }}">
-            <input type="hidden" name="post_slug" value="{{ post.slug }}" />
+        <form action="" method="post">{% csrf_token %}
             {{ form.as_p }}
             <input type="submit" class="btn btn-primary" name='create_comment' value="Comment"/>
         </form>
