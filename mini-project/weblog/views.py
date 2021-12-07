@@ -306,7 +306,7 @@ def contact(request):
 
             try:
                 send_mail(subject, message, 'admin@example.com', ['admin@example.com'])
-                messages.success(request, 'An Email has been sent to your inbox.', extra_tags="success")
+                messages.success(request, 'Thanks for contacting us :D', extra_tags="success")
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             
