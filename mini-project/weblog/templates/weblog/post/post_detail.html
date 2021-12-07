@@ -4,51 +4,73 @@
 
 {% block content %}
 
-    <div class="card mb-4">
+    <div class="card border-info mb-3">
+        <div class="card-header">Post Detail</div>
         <div class="card-body">
-            <h1 class="card-title">Owner: {{post.owner}}</h1>
-            <h2 class="card-title">Title: {{post.title}}</h2><br>
-            <p class="card-text">Content: {{post.content}}</p>
-            <p class="card-text">Created On: {{post.created}}</p>
-            <p class="card-text">Slug: {{post.slug}}</p>
+            <h1 class="card-title mb-0">Title: {{post.title}}</h1>
+            <h2 class="card-title">Author: {{post.owner}}</h2>
+            <p class="card-text mb-0 mt-3"><small class="text-muted">Created: {{post.created}}</small></p>
+            <p class="card-text mb-0"><small class="text-muted">Updated: {{post.updated_on}}</small></p>
             {% if user.is_authenticated %}
-            <form action="{% url 'weblog:post_stuff' post.slug %}" method="post">{% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.path }}">
-                <button class="btn btn-success btn-sm" type="submit" name="post_like" value="{{post.slug}}">Like - {{total_likes}}</button>
-                <button class="btn btn-danger btn-sm" type="submit" name="post_dislike" value="{{post.slug}}">Dislike - {{total_dislikes}}</button>
-            <form/>
-
+                <form action="{% url 'weblog:post_stuff' post.slug %}" method="post">{% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn btn-success btn-sm mt-3" type="submit" name="post_like" value="{{post.slug}}">{{total_likes}} Like</button>
+                    <button class="btn btn-danger btn-sm mt-3" type="submit" name="post_dislike" value="{{post.slug}}">{{total_dislikes}} Dislike</button>
+                <form/>
             {% else %}
-                <button class="btn btn-success btn-sm" >Like - {{total_likes}}</button>
-                <button class="btn btn-danger btn-sm" >Dislike - {{total_dislikes}}</button>
+                <button class="btn btn-success btn-sm mt-3" >{{total_likes}} Like</button>
+                <button class="btn btn-danger btn-sm mt-3" >{{total_dislikes}} Dislike</button>
             {% endif %}
             <hr/>
-            <p class="card-text">Comments: </p>
-            {% for comment in post.comment_set.all %}
-                {{comment.owner}} <br>
-                {{comment.text}} <br>
-                {% if user.is_authenticated %}
-                <form action="" method="post">{% csrf_token %}
-                    <button class="btn btn-success btn-sm" type="submit" name="comment_like" value="{{comment.id}}">Like - {{ comment.total_likes }}</button>
-                    <button class="btn btn-danger btn-sm" type="submit" name="comment_dislike" value="{{comment.id}}">Dislike - {{ comment.total_dislikes }}</button>
-                <form/>
+            <h3 class="card-title">Content:</h3>
+            <p class="card-text">{{post.content}}</p>
+            <hr/>
+            <h3 class="card-title">Tags:</h3>
+            <ul>
+                {% for tag in post.tag.all %}
+                    <li>{{tag}}</li>
+                {% endfor %}
+            </ul>
+            <hr/>
+            <p class="card-text mb-0 mt-3"><b>Status:</b> {{post.status}}</p>
+            <p class="card-text mb-0"><b>Slug:</b> {{post.slug}}</p>
+        </div>
+    </div>
 
+    {% load crispy_forms_tags %}
+
+    {% if user.is_authenticated %}
+
+        <div class="card border-dark mb-3">
+            <div class="card-header">Comment on this post</div>
+            <div class="card-body text-dark">
+                <form action="" method="post">{% csrf_token %}
+                    {{form.text | as_crispy_field}}
+                    <input type="submit" class="btn btn-primary mt-3" name='create_comment' value="Comment"/>
+                </form>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <div class="card text-dark bg-info mb-3">
+        <div class="card-header">Comments</div>
+        <div class="card-body">
+            {% for comment in post.comment_set.all %}
+                <h5 class="card-title mb-0">{{comment.owner}}: </h5>
+                <p class="card-text">{{comment.text}}</p>
+                {% if user.is_authenticated %}
+                    <form action="" method="post">{% csrf_token %}
+                        <button class="btn btn-success btn-sm" type="submit" name="comment_like" value="{{comment.id}}">{{ comment.total_likes }} Like</button>
+                        <button class="btn btn-danger btn-sm" type="submit" name="comment_dislike" value="{{comment.id}}">{{ comment.total_dislikes }} Dislike</button>
+                    <form/>
                 {% else %}
-                    <button class="btn btn-success btn-sm">Like - {{ comment.total_likes }}</button>
-                    <button class="btn btn-danger btn-sm">Dislike - {{ comment.total_dislikes }}</button>
+                    <button class="btn btn-success btn-sm">{{ comment.total_likes }} Like</button>
+                    <button class="btn btn-danger btn-sm">{{ comment.total_dislikes }} Dislike</button>
                 {% endif %}
                 <hr>
             {% endfor %}
         </div>
     </div>
-
-    {% if user.is_authenticated %}
-
-        <form action="" method="post">{% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" class="btn btn-primary" name='create_comment' value="Comment"/>
-        </form>
-
-    {% endif %}
 
 {% endblock content %}
