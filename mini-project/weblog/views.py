@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from .models import *
 from .forms import *
 
+
 ##### page stuff
 def login_view(request):
     if request.method == 'POST':
@@ -71,6 +72,7 @@ def search_index(request):
     
     else:
         return render(request, 'weblog/search_index.html')
+
 
 ##### post stuff
 def post_list(request):
@@ -160,6 +162,7 @@ def post_stuff(request, slug):
     next = request.POST.get('next', '/')
     return HttpResponseRedirect(next)
 
+
 ##### category stuff
 class CategoryList(ListView):
     model = Category
@@ -197,6 +200,7 @@ def category_create(request):
         return redirect(reverse('weblog:category_list'))
 
     return render(request, 'weblog/category_create.html', {'form': form})
+
 
 ##### tag stuff
 class TagList(ListView):
