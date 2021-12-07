@@ -67,8 +67,7 @@ def post_create(request):
             post.save()
             form.save_m2m()
             messages.info(request, f"Post created successfully.", extra_tags='success')
-            next = request.POST.get('next', '/')
-            return HttpResponseRedirect(next)
+            return redirect(reverse('weblog:dashboard'))
     else:
         form = PostForm()
 
@@ -81,8 +80,7 @@ def post_edit(request, slug):
     if form.is_valid():
         form.save()
         messages.info(request, f"Post updated successfully.", extra_tags='success')
-        next = request.POST.get('next', '/')
-        return HttpResponseRedirect(next)
+        return redirect(reverse('weblog:post_list'))
 
     return render(request, 'weblog/post_edit.html', {'form': form })
 
@@ -191,8 +189,8 @@ def category_edit(request, id):
     if form.is_valid():
         form.save()
         messages.info(request, f"Category updated successfully.", extra_tags='success')
-        next = request.POST.get('next', '/')
-        return HttpResponseRedirect(next)
+        return redirect(reverse('weblog:category_list'))
+
 
     return render(request, 'weblog/category_edit.html', {'form': form })
 
@@ -202,8 +200,8 @@ def category_create(request):
     if form.is_valid():
         form.save()
         messages.info(request, f"Category created successfully.", extra_tags='success')
-        next = request.POST.get('next', '/')
-        return HttpResponseRedirect(next)
+        return redirect(reverse('weblog:category_list'))
+
 
     return render(request, 'weblog/category_create.html', {'form': form})
 
@@ -225,8 +223,8 @@ def tag_edit(request, id):
     if form.is_valid():
         form.save()
         messages.info(request, f"Tag updated successfully.", extra_tags='success')
-        next = request.POST.get('next', '/')
-        return HttpResponseRedirect(next)
+        return redirect(reverse('weblog:tag_list'))
+
 
     return render(request, 'weblog/tag_edit.html', {'form': form })
 
@@ -236,8 +234,8 @@ def tag_create(request):
     if form.is_valid():
         form.save()
         messages.info(request, f"Tag created successfully.", extra_tags='success')
-        next = request.POST.get('next', '/')
-        return HttpResponseRedirect(next)
+        return redirect(reverse('weblog:tag_list'))
+
 
     return render(request, 'weblog/tag_create.html', {'form': form})
 
