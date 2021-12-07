@@ -12,29 +12,47 @@
     <body>
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                {% if user.is_authenticated %}
-                    <a class="navbar-brand" href="{% url 'weblog:dashboard' %}">Welcome, {{user.username}}</a>
-                    <a class="navbar-brand" href="{% url 'weblog:logout' %}">Logout</a>
-                {% else %}
-                    <a class="navbar-brand" href="{% url 'weblog:login' %}">Login</a>
-                {% endif %}
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="container-fluid mx-5">
+                <a class="navbar-brand" href="{% url 'weblog:post_list' %}">Weblog</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'weblog:post_list' %}">Post List</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'weblog:category_list' %}">Category List</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'weblog:tag_list' %}">Tag List</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'weblog:contact' %}">Contact Us</a></li>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <a class="navbar-brand"> | </a>
+                        {% if user.is_authenticated %}
+                            <a class="navbar-brand" href="{% url 'weblog:dashboard' %}">{{user.username}}</a>
+                            <a class="navbar-brand" href="{% url 'weblog:logout' %}">Logout</a>
+                        {% else %}
+                            <a class="navbar-brand" href="{% url 'weblog:login' %}">Login</a>
+                        {% endif %}
+                        <a class="navbar-brand"> | </a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'weblog:post_list' %}">Homepage</a>
+                        </li>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Lists
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'weblog:post_list' %}">Post</a></li>
+                                <li><a class="dropdown-item" href="{% url 'weblog:category_list' %}">Category</a></li>
+                                <li><a class="dropdown-item" href="{% url 'weblog:tag_list' %}">Tag</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'weblog:contact' %}">Contact Us</a>
+                        </li>
                     </ul>
+                    <form class="d-flex" style="margin-bottom: 0px;" action="{% url 'weblog:search_index' %}" method="post">{% csrf_token %}
+                        <input class="form-control me-2" name='searched' type="search" placeholder="Search in posts" aria-label="Search">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </form>
                 </div>
-                <form class="form-inline" action="{% url 'weblog:search_index' %}" method="post">{% csrf_token %}
-                    <input name='searched' class="form-control mr-sm-2" type="search" placeholder="Search in posts" aria-label="Search">
-                    <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
-                </form>
             </div>
         </nav>
-       
+
         <!-- Page content-->
         <div class="container">
             <div class="row">
