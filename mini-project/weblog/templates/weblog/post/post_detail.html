@@ -13,7 +13,6 @@
             <p class="card-text mb-0"><small class="text-muted">Updated: {{post.updated_on}}</small></p>
             {% if user.is_authenticated %}
                 <form action="{% url 'weblog:post_stuff' post.slug %}" method="post">{% csrf_token %}
-                    <input type="hidden" name="next" value="{{ request.path }}">
                     <button class="btn btn-success btn-sm mt-3" type="submit" name="post_like" value="{{post.slug}}">{{total_likes}} Like</button>
                     <button class="btn btn-danger btn-sm mt-3" type="submit" name="post_dislike" value="{{post.slug}}">{{total_dislikes}} Dislike</button>
                 <form/>
@@ -34,6 +33,11 @@
             <hr/>
             <p class="card-text mb-0 mt-3"><b>Status:</b> {{post.status}}</p>
             <p class="card-text mb-0"><b>Slug:</b> {{post.slug}}</p>
+                
+            {% if post.owner == user %}
+                <a class="btn btn-primary mt-3" href="{% url 'weblog:post_edit' post.slug %}">Edit</a>
+                <a class="btn btn-danger mt-3" href="{% url 'weblog:post_delete' post.slug %}">Delete</a>
+            {% endif %}
         </div>
     </div>
 
@@ -42,7 +46,7 @@
         <div class="card border-dark mb-3">
             <div class="card-header">Comment on this post</div>
             <div class="card-body text-dark">
-                <form action="" method="post">{% csrf_token %}
+                <form action="{% url 'weblog:post_stuff' post.slug %}" method="post">{% csrf_token %}
                     {{form.text | as_crispy_field}}
                     <input type="submit" class="btn btn-primary mt-3" name='create_comment' value="Comment"/>
                 </form>
@@ -65,7 +69,7 @@
                 <h5 class="card-title mb-0">{{comment.owner}}: </h5>
                 <p class="card-text">{{comment.text}}</p>
                 {% if user.is_authenticated %}
-                    <form action="" method="post">{% csrf_token %}
+                    <form action="{% url 'weblog:post_stuff' post.slug %}" method="post">{% csrf_token %}
                         <button class="btn btn-success btn-sm" type="submit" name="comment_like" value="{{comment.id}}">{{ comment.total_likes }} Like</button>
                         <button class="btn btn-danger btn-sm" type="submit" name="comment_dislike" value="{{comment.id}}">{{ comment.total_dislikes }} Dislike</button>
                     <form/>

@@ -138,16 +138,19 @@ def post_stuff(request, slug):
             comment.save()
             form.save()
             messages.info(request, f"Comment created successfully.", extra_tags='success')
-            next = request.POST.get('next', '/')
-            return HttpResponseRedirect(next)
+            
+            return redirect(reverse('weblog:post_detail',args=[slug]))
+
 
     elif 'comment_like' in request.POST:
         comment = get_object_or_404(Comment, id=request.POST.get('comment_like'))
+        print(f'comment_like - {comment.id}')
         comment.like.add(request.user)
         comment.save()
     
     elif 'comment_dislike' in request.POST:
         comment = get_object_or_404(Comment, id=request.POST.get('comment_dislike'))
+        print(f'comment_dislike - {comment.id}')
         comment.dislike.add(request.user)
         comment.save()
 
@@ -159,8 +162,9 @@ def post_stuff(request, slug):
         post.dislike.add(request.user)
         post.save()
 
-    next = request.POST.get('next', '/')
-    return HttpResponseRedirect(next)
+    print(request.POST)
+    print('clicked!')
+    return redirect(reverse('weblog:post_detail',args=[slug]))
 
 
 ##### category stuff
