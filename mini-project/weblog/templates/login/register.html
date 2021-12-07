@@ -5,8 +5,8 @@
 
 {% block content %}
 
-    <form class="login100-form" method="post">
-        {% csrf_token %}
+    <form class="login100-form" method="post">{% csrf_token %}
+        
         <span class="login100-form-title p-b-33">
             Account Register
         </span>
@@ -52,6 +52,11 @@
 
             <a href="{% url 'weblog:login' %}" class="txt2 hov1">
                 Login
+            </a>
+        </div>
+        <div class="text-center mt-1">
+            <a href="{% url 'weblog:home' %}" class="txt2 hov1">
+                Back to Homepage
             </a>
         </div>
     </form>

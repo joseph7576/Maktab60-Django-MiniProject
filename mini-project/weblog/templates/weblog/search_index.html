@@ -1,18 +1,18 @@
-{% extends 'weblog/index.html' %}
-{% load static %}
+{% extends 'weblog/index.html' %}{% load static %}
+
 {% block title %} Search Page {% endblock title %}
 
 {% block content %}
 
-
-
 {% if searched %}
 
-    <h1>You Searched for "{{ searched }}"</h1>
-    <br/>
-    {% for post in posts %}
-        <a href="{% url 'weblog:post_detail' post.slug %}">{{post}}</a><br/>
-    {% endfor %}
+    <h1>Search result for "{{ searched }}"</h1>
+    <hr/>
+    <ul>
+        {% for post in posts %}
+            <li><a href="{% url 'weblog:post_detail' post.slug %}">{{post}}<a/></li>
+        {% endfor %}
+    </ul>
 
 {% else %}
 
@@ -20,20 +20,5 @@
 
 {% endif %}
 
-{% comment %} {% for post in posts %}
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="card-title">{{post.title}}</h2>
-            <p class="card-text">{{post.content}}</p>
-            <a class="btn btn-info" href="{% url 'weblog:post_detail' post.slug %}">Detail</a>
-            {% if post.owner == user %}
-                <a class="btn btn-primary" href="{% url 'weblog:post_edit' post.slug %}">Edit</a>
-                <a class="btn btn-danger" href="{% url 'weblog:post_delete' post.slug %}">Delete</a>
-            {% endif %}
-        </div>
-    </div>
-
-{% endfor %} {% endcomment %}
 
 {% endblock content %}
