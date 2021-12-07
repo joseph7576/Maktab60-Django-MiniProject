@@ -13,6 +13,7 @@
             <p class="card-text">Slug: {{post.slug}}</p>
             {% if user.is_authenticated %}
             <form action="{% url 'weblog:post_like' post.slug %}" method="post">{% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
                 <button class="btn btn-success btn-sm" type="submit" name="post_like" value="{{post.slug}}">Like - {{total_likes}}</button>
                 <button class="btn btn-danger btn-sm" type="submit" name="post_dislike" value="{{post.slug}}">Dislike - {{total_dislikes}}</button>
             <form/>
@@ -25,8 +26,9 @@
                 {% if user.is_authenticated %}
                 <form action="{% url 'weblog:comment_like' comment.id %}" method="post">{% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.path }}">
+                    {% comment %} <input type="hidden" name="comment_id" value="{{ comment.id }}"> {% endcomment %}
                     <button class="btn btn-success btn-sm" type="submit" name="comment_like" value="{{comment.id}}">Like - {{ comment.total_likes }}</button>
-                    <button class="btn btn-danger btn-sm" type="submit" name="commnet_dislike" value="{{comment.id}}">Dislike - {{ comment.total_dislikes }}</button>
+                    <button class="btn btn-danger btn-sm" type="submit" name="comment_dislike" value="{{comment.id}}">Dislike - {{ comment.total_dislikes }}</button>
                 <form/>
                 {% endif %}
                 <hr>
@@ -37,9 +39,10 @@
     {% if user.is_authenticated %}
 
         <form action="{% url 'weblog:create_comment' %}" method="post">{% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
             <input type="hidden" name="post_slug" value="{{ post.slug }}" />
             {{ form.as_p }}
-            <input type="submit" class="btn btn-primary" value="Comment"/>
+            <input type="submit" class="btn btn-primary" name='create_comment' value="Comment"/>
         </form>
 
     {% endif %}

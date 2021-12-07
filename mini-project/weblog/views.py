@@ -22,9 +22,34 @@ def search_index(request):
 def post_like(request, slug):
     post = get_object_or_404(Post, slug=slug)
     
-    if 'post_like' in request.POST:
+    # print("i clicked the other form button :(((((")
+
+    if 'create_comment' in request.POST:
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = Post.objects.get(slug=slug)
+            comment.owner = request.user
+            comment.save()
+            form.save()
+            messages.info(request, f"Comment created successfully.", extra_tags='success')
+            next = request.POST.get('next', '/')
+            return HttpResponseRedirect(next)
+
+    elif 'comment_like' in request.POST:
+        comment = get_object_or_404(Comment, id=request.POST.get('comment_like'))
+        print(f'comment_like - id={comment.id}')
+        comment.like.add(request.user)
+    elif 'comment_dislike' in request.POST:
+        comment = get_object_or_404(Comment, id=request.POST.get('comment_dislike'))
+        print(f'comment_dislike - id={comment.id}')
+        comment.dislike.add(request.user)
+
+    elif 'post_like' in request.POST:
+        print(f'post_like - id:{post.id}')
         post.like.add(request.user)
     elif 'post_dislike' in request.POST:
+        print(f'post_dislike - id:{post.id}')
         post.dislike.add(request.user)
     
     return redirect(reverse('weblog:post_detail', args=[slug]))
@@ -91,7 +116,9 @@ def create_comment(request):
             comment.save()
             form.save()
             messages.info(request, f"Comment created successfully.", extra_tags='success')
-            return redirect(reverse('weblog:post_list'))
+            next = request.POST.get('next', '/')
+            return HttpResponseRedirect(next)
+            # return redirect(reverse('weblog:post_list'))
 
 # TODO: Handle Comment Like - Multiple Form Mechanism
 def comment_like(request, id):
