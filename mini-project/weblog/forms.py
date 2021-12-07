@@ -4,11 +4,12 @@ from django.forms import fields, widgets
 from django.http import request
 from .models import *
 
-
+# login & registration form
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
+    # adds 'input100' into every fields class attrs ( for template use only )
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
@@ -21,21 +22,14 @@ class RegisterForm(forms.Form):
     email = forms.CharField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
+    # adds 'input100' into every fields class attrs ( for template use only )
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'input100'
 
-class CategoryForm(forms.ModelForm):
-    class Meta:
-        model = Category
-        fields = '__all__'
 
-class TagForm(forms.ModelForm):
-    class Meta:
-        model = Tag
-        fields = '__all__'
-
+# post form
 class PostForm(forms.ModelForm):
     title = forms.CharField()
     content = forms.CharField(widget=forms.Textarea)
@@ -47,6 +41,22 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['title', 'content', 'image', 'category', 'tag' , 'status']
 
+
+# category form
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+# tag form
+class TagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = '__all__'
+
+
+# comment form
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -57,6 +67,8 @@ class CommentForm(forms.ModelForm):
         for field in self.fields:
             self.fields[field].required = False
 
+
+# contact form
 class ContactForm(forms.Form):
     first_name = forms.CharField(max_length = 50)
     last_name = forms.CharField(max_length = 50)
