@@ -1,23 +1,26 @@
-{% extends 'weblog/index.html' %}
-{% load static %}
+{% extends 'weblog/index.html' %}{% load static %}
+
 {% block title %} Post List {% endblock title %}
 
 {% block content %}
 
-{% for post in posts %}
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="card-title">{{post.title}}</h2>
-            <p class="card-text">{{post.content}}</p>
-            <a class="btn btn-info" href="{% url 'weblog:post_detail' post.slug %}">Detail</a>
-            {% if post.owner == user %}
-                <a class="btn btn-primary" href="{% url 'weblog:post_edit' post.slug %}">Edit</a>
-                <a class="btn btn-danger" href="{% url 'weblog:post_delete' post.slug %}">Delete</a>
-            {% endif %}
+    {% for post in posts %}
+
+        <div class="card mb-3">
+            <img src="{% if post.image %} {{ post.image.url }}{% endif %}" class="card-img-top">
+            <div class="card-body">
+                <h2 class="card-title"><a href="{% url 'weblog:post_detail' post.slug %}">{{post.title}}<a/></h2>
+                <h6 class="card-subtitle mb-2 text-muted">Author: {{post.owner}}</h6>
+                <p class="card-text">{{post.content}}</p>
+                <p class="card-text mb-0"><small class="text-muted">Created: {{post.created}}</small></p>
+                {% if post.owner == user %}
+                    <a class="btn btn-primary mt-3" href="{% url 'weblog:post_edit' post.slug %}">Edit</a>
+                    <a class="btn btn-danger mt-3" href="{% url 'weblog:post_delete' post.slug %}">Delete</a>
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-{% endfor %}
+    {% endfor %}
 
 {% endblock content %}

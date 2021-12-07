@@ -4612,8 +4612,9 @@ textarea.form-control-lg {
 
 .card-img,
 .card-img-top {
-  border-top-left-radius: calc(0.25rem - 1px);
-  border-top-right-radius: calc(0.25rem - 1px);
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+    
 }
 
 .card-img,
@@ -11285,4 +11286,10 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important;
   }
+}
+
+.card-img-top {
+  /* width: 50%; */
+  /* height: 3px; */
+  object-fit: cover;
 }

@@ -30,7 +30,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'weblog:post_list' %}">Homepage</a>
                         </li>
-                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Create
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'weblog:post_create' %}">Post</a></li>
+                                <li><a class="dropdown-item" href="{% url 'weblog:category_create' %}">Category</a></li>
+                                <li><a class="dropdown-item" href="{% url 'weblog:tag_create' %}">Tag</a></li>
+                            </ul>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Lists
