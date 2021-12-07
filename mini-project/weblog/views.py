@@ -107,7 +107,7 @@ def post_create(request):
 
 def post_edit(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    form = PostForm(request.POST or None, instance=post)
+    form = PostForm(request.POST or None, request.FILES or None, instance=post)
 
     if form.is_valid():
         form.save()
