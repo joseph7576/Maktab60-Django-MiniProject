@@ -1,16 +1,21 @@
-{% extends 'weblog/index.html' %}
-{% load static %}
+{% extends 'weblog/index.html' %}{% load static %}
+
 {% block title %} Tag Detail {% endblock title %}
 
 {% block content %}
 
-    <div class="card mb-4">
+    <div class="card border-info mb-3">
+        <div class="card-header">Tag Detail</div>
         <div class="card-body">
-            <h2 class="card-title">Name: {{object.name}}</h2><br>
-            <p class="card-text">Posts: </p>
-            {% for post in object.post_set.all %}
-                {{ post.title }} <br>
-            {% endfor %}
+            <h1 class="card-title mb-0">Name: {{object.name}}</h1>
+            <p class="card-text mb-0 mt-3"><small class="text-muted">Create &amp; Updated: {{object.updated_on}}</small></p>
+            <hr/>
+            <h3 class="card-title">Posts:</h3>
+            <ul>
+                {% for post in object.post_set.all %}
+                    <li>{{post.title}}</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 

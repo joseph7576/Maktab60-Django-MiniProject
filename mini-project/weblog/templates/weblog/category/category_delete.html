@@ -4,12 +4,13 @@
 
 {% block content %}
 
-    <div class="card mb-4">
+    <div class="card text-white bg-danger mb-3">
+        <div class="card-header">Delete Category</div>
         <div class="card-body">
             <form action="" method="post">{% csrf_token %}
-                <p class="card-text">Are you sure you want to delete "{{ category }}"?</p>
-                <input type="submit" class="btn btn-primary" value="Yes"/>
-                <a href="{% url 'weblog:category_list' %}" class="btn btn-dark" role="button">Back</a>
+                <h3 class="card-text"><b>Are you sure you want to delete "{{ category }}"?</b></h3>
+                <input type="submit" class="btn btn-primary mt-3" value="Yes"/>
+                <a href="{% url 'weblog:category_list' %}" class="btn btn-dark mt-3" role="button">Back</a>
             </form>
         </div>
     </div>
