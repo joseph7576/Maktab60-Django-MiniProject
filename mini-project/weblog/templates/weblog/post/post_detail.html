@@ -49,6 +49,13 @@
             </div>
         </div>
 
+    {% else %}
+
+        <div class="alert alert-info" role="alert">
+            <p class="d-inline" > You need to login inorder to create comment on this post. </p>
+            <a href="{% url 'weblog:login' %}" class="btn btn-info position-absolute top-50 end-0 translate-middle-y" role="button" style="margin-right: 8px;">Login</a>
+        </div>
+
     {% endif %}
 
     <div class="card text-dark bg-info mb-3">

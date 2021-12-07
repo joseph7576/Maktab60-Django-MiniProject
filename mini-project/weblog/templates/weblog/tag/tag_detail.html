@@ -13,7 +13,7 @@
             <h3 class="card-title">Posts:</h3>
             <ul>
                 {% for post in object.post_set.all %}
-                    <li>{{post.title}}</li>
+                    <li><a href="{% url 'weblog:post_detail' post.slug %}">{{post.title}}<a/></li>
                 {% endfor %}
             </ul>
         </div>
