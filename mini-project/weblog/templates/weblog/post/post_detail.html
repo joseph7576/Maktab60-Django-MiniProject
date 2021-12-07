@@ -1,5 +1,5 @@
-{% extends 'weblog/index.html' %}
-{% load static %}
+{% extends 'weblog/index.html' %}{% load static %}{% load crispy_forms_tags %}
+
 {% block title %} Post Detail {% endblock title %}
 
 {% block content %}
@@ -36,8 +36,6 @@
             <p class="card-text mb-0"><b>Slug:</b> {{post.slug}}</p>
         </div>
     </div>
-
-    {% load crispy_forms_tags %}
 
     {% if user.is_authenticated %}
 

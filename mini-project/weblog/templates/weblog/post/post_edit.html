@@ -1,14 +1,15 @@
-{% extends 'weblog/index.html' %}
-{% load static %}
+{% extends 'weblog/index.html' %}{% load static %}{% load crispy_forms_tags %}
+
 {% block title %} Post Edit {% endblock title %}
 
 {% block content %}
 
-    <div class="card mb-4">
+    <div class="card border-info mb-4">
+        <div class="card-header">Post Edit</div>
         <div class="card-body">
             <form enctype="multipart/form-data" action="" method="post">{% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" class="btn btn-primary" value="Done"/>
+                {{ form | crispy }}
+                <input type="submit" class="btn btn-primary mt-3" value="Done"/>
             </form>
         </div>
     </div>
