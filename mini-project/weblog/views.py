@@ -8,6 +8,59 @@ from django.http import HttpResponseRedirect
 from .models import *
 from .forms import *
 
+##### page stuff
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.", extra_tags='success')
+                return redirect(reverse('weblog:dashboard'))
+            
+            else:
+                messages.error(request,"Invalid username or password.", extra_tags='danger')
+        
+        else:
+            messages.error(request,"Invalid username or password.", extra_tags='danger')
+
+    else:
+        form = LoginForm()
+
+    return render(request, 'login/login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    messages.info(request, "You have successfully logged out.",  extra_tags='success')
+    return redirect(reverse('weblog:home'))
+    
+def register_view(request):
+    form = RegisterForm(None or request.POST)
+    if request.method == "POST":
+        if form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            User.objects.create_user(first_name=first_name,
+                                       last_name=last_name,
+                                       username=username,
+                                       email=email,
+                                       password=password)
+            messages.info(request, f"You have successfully registered as {username}.", extra_tags='success')
+            return redirect(reverse('weblog:login'))
+    
+    return render(request, 'login/register.html', {'form':form})
+
+def dashboard_view(request):
+    user = request.user
+    posts = Post.objects.filter(owner=user)
+    context = {'user': user, 'posts': posts}
+    return render(request, 'login/dashboard.html', context=context)
 
 def search_index(request):
     if request.method == "POST":
@@ -19,8 +72,59 @@ def search_index(request):
     else:
         return render(request, 'weblog/search_index.html')
 
-def post_stuff(request, slug):
+##### post stuff
+def post_list(request):
+    posts = Post.objects.all()
+    context = {'posts': posts}
+    return render(request, 'weblog/post_list.html', context=context)
 
+def post_detail(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    form = CommentForm()
+    total_likes = post.total_likes()
+    total_dislikes = post.total_dislikes()
+    context = {'post': post, 'form': form, 'total_likes':total_likes, 'total_dislikes':total_dislikes}
+    return render(request, 'weblog/post_detail.html', context=context)
+
+def post_create(request):
+    if request.method == 'POST':
+        print(request.FILES)
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.owner = request.user
+            post.save()
+            form.save_m2m()
+            messages.info(request, f"Post created successfully.", extra_tags='success')
+            return redirect(reverse('weblog:dashboard'))
+    
+    else:
+        form = PostForm()
+
+    return render(request, 'weblog/post_create.html',{'form': form})
+
+def post_edit(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    form = PostForm(request.POST or None, instance=post)
+
+    if form.is_valid():
+        form.save()
+        messages.info(request, f"Post updated successfully.", extra_tags='success')
+        return redirect(reverse('weblog:post_list'))
+
+    return render(request, 'weblog/post_edit.html', {'form': form })
+
+def post_delete(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+
+    if request.method == 'POST':
+        post.delete()
+        messages.info(request, f"Post deleted successfully.", extra_tags='success')
+        return redirect(reverse('weblog:post_list'))
+    
+    return render(request, 'weblog/post_delete.html', {'post': post})
+
+def post_stuff(request, slug):
     post = get_object_or_404(Post, slug=slug)
     
     if 'create_comment' in request.POST:
@@ -53,124 +157,15 @@ def post_stuff(request, slug):
         post.dislike.add(request.user)
         post.save()
 
-    
     next = request.POST.get('next', '/')
     return HttpResponseRedirect(next)
 
-def post_create(request):
-    if request.method == 'POST':
-        print(request.FILES)
-        form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.owner = request.user
-            post.save()
-            form.save_m2m()
-            messages.info(request, f"Post created successfully.", extra_tags='success')
-            return redirect(reverse('weblog:dashboard'))
-    else:
-        form = PostForm()
-
-    return render(request, 'weblog/post_create.html',{'form': form})
-
-def post_edit(request, slug):
-    post = get_object_or_404(Post, slug=slug)
-    form = PostForm(request.POST or None, instance=post)
-
-    if form.is_valid():
-        form.save()
-        messages.info(request, f"Post updated successfully.", extra_tags='success')
-        return redirect(reverse('weblog:post_list'))
-
-    return render(request, 'weblog/post_edit.html', {'form': form })
-
-def post_delete(request, slug):
-    post = get_object_or_404(Post, slug=slug)
-
-    if request.method == 'POST':
-        post.delete()
-        messages.info(request, f"Post deleted successfully.", extra_tags='success')
-        return redirect(reverse('weblog:post_list'))
-    
-    return render(request, 'weblog/post_delete.html', {'post': post})
-
-def post_list(request):
-    posts = Post.objects.all()
-    context = {'posts': posts}
-    return render(request, 'weblog/post_list.html', context=context)
-
-def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug)
-    form = CommentForm()
-    total_likes = post.total_likes()
-    total_dislikes = post.total_dislikes()
-    context = {'post': post, 'form': form, 'total_likes':total_likes, 'total_dislikes':total_dislikes}
-    return render(request, 'weblog/post_detail.html', context=context)
-
+##### category stuff
 class CategoryList(ListView):
     model = Category
 
 class CategoryDetail(DetailView):
     model = Category
-
-class TagList(ListView):
-    model = Tag
-
-class TagDetail(DetailView):
-    model = Tag
-
-def dashboard_view(request):
-    user = request.user
-    posts = Post.objects.filter(owner=user)
-    context = {'user': user, 'posts': posts}
-    return render(request, 'login/dashboard.html', context=context)
-
-def login_view(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.info(request, f"You are now logged in as {username}.", extra_tags='success')
-                return redirect(reverse('weblog:dashboard'))
-            else:
-                messages.error(request,"Invalid username or password.", extra_tags='danger')
-        else:
-            messages.error(request,"Invalid username or password.", extra_tags='danger')
-
-    else:
-        form = LoginForm()
-
-    return render(request, 'login/login.html', {'form': form})
-
-def logout_view(request):
-    logout(request)
-    messages.info(request, "You have successfully logged out.",  extra_tags='success')
-    return redirect(reverse('weblog:home'))
-    
-def register_view(request):
-
-    form = RegisterForm(None or request.POST)
-    if request.method == "POST":
-        if form.is_valid():
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            User.objects.create_user(first_name=first_name,
-                                       last_name=last_name,
-                                       username=username,
-                                       email=email,
-                                       password=password)
-            messages.info(request, f"You have successfully registered as {username}.", extra_tags='success')
-            return redirect(reverse('weblog:login'))
-    
-    return render(request, 'login/register.html', {'form':form})
-
 
 def category_delete(request, id):
     category = get_object_or_404(Category, id=id)
@@ -191,7 +186,6 @@ def category_edit(request, id):
         messages.info(request, f"Category updated successfully.", extra_tags='success')
         return redirect(reverse('weblog:category_list'))
 
-
     return render(request, 'weblog/category_edit.html', {'form': form })
 
 def category_create(request):
@@ -202,9 +196,14 @@ def category_create(request):
         messages.info(request, f"Category created successfully.", extra_tags='success')
         return redirect(reverse('weblog:category_list'))
 
-
     return render(request, 'weblog/category_create.html', {'form': form})
 
+##### tag stuff
+class TagList(ListView):
+    model = Tag
+
+class TagDetail(DetailView):
+    model = Tag
 
 def tag_delete(request, id):
     tag = get_object_or_404(Tag, id=id)
@@ -225,7 +224,6 @@ def tag_edit(request, id):
         messages.info(request, f"Tag updated successfully.", extra_tags='success')
         return redirect(reverse('weblog:tag_list'))
 
-
     return render(request, 'weblog/tag_edit.html', {'form': form })
 
 def tag_create(request):
@@ -236,10 +234,12 @@ def tag_create(request):
         messages.info(request, f"Tag created successfully.", extra_tags='success')
         return redirect(reverse('weblog:tag_list'))
 
-
     return render(request, 'weblog/tag_create.html', {'form': form})
 
-# password reset: https://ordinarycoders.com/blog/article/django-password-reset
+
+
+
+##### unkown stuff
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
@@ -250,6 +250,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 
+# password reset: https://ordinarycoders.com/blog/article/django-password-reset
 def password_reset_request(request):
     if request.method == "POST":
         password_reset_form = PasswordResetForm(request.POST)
