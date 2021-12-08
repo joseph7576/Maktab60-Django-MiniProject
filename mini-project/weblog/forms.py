@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import *
+from .models import Post, Comment, Category, Tag
 
 # login & registration form
 class LoginForm(forms.Form):

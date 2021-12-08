@@ -21,41 +21,36 @@
     
         {% for post in posts %}
 
-
-        <div class="card mb-3">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="{% if post.image %} {{ post.image.url }} {% endif %}" class="img-fluid rounded-start">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                    <div class="card-body" style="padding-bottom: 6px;">
-                        <h5 class="card-title"><a href="{% url 'weblog:post_detail' post.slug %}">{{post.title}}<a/></h5>
-                        <p class="card-text mb-0"><small class="text-muted">Created: {{post.created}}</small></p>
-                        <p class="card-text">{{post.content}}</p>
-                        {% if post.owner == user %}
-                            <a class="btn btn-primary" style="margin-top: 10px;" href="{% url 'weblog:post_edit' post.slug %}">Edit</a>
-                            <a class="btn btn-danger" style="margin-top: 10px;" href="{% url 'weblog:post_delete' post.slug %}">Delete</a>
-                        {% endif %}
+            <div class="card mb-3">
+                <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{% if post.image %} {{ post.image.url }} {% endif %}" class="img-fluid rounded-start">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <div class="card-body" style="padding-bottom: 6px;">
+                            <h5 class="card-title"><a href="{% url 'weblog:post_detail' post.slug %}">{{post.title}}<a/></h5>
+                            <p class="card-text mb-0"><small class="text-muted">Created: {{post.created}}</small></p>
+                            <p class="card-text">{{post.content}}</p>
+                            {% if post.owner == user %}
+                                <a class="btn btn-primary" style="margin-top: 10px;" href="{% url 'weblog:post_edit' post.slug %}">Edit</a>
+                                <a class="btn btn-danger" style="margin-top: 10px;" href="{% url 'weblog:post_delete' post.slug %}">Delete</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-              </div>
+                </div>
             </div>
-          </div>
 
-    {% endfor %}
-
+        {% endfor %}
 
     {% else %}
 
-    <div class="alert alert-primary" role="alert">
-        <p class="d-inline" > You don't have any posts yet. </p>
-        <a href="{% url 'weblog:post_create' %}" class="btn btn-info position-absolute top-50 end-0 translate-middle-y" role="button" style="margin-right: 8px;">Create Post</a>
-    </div>
-        
+        <div class="alert alert-primary" role="alert">
+            <p class="d-inline" > You don't have any posts yet. </p>
+            <a href="{% url 'weblog:post_create' %}" class="btn btn-info position-absolute top-50 end-0 translate-middle-y" role="button" style="margin-right: 8px;">Create Post</a>
+        </div>
     
     {% endif %}
-
-    
 
 {% endblock content %}

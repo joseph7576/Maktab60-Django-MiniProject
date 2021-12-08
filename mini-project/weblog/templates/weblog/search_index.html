@@ -4,21 +4,40 @@
 
 {% block content %}
 
-{% if searched %}
+    {% if searched %}
 
-    <h1>Search result for "{{ searched }}"</h1>
-    <hr/>
-    <ul>
-        {% for post in posts %}
-            <li><a href="{% url 'weblog:post_detail' post.slug %}">{{post}}<a/></li>
-        {% endfor %}
-    </ul>
+        <h1>Search result for "{{ searched }}"</h1>
+        <hr/>
 
-{% else %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
 
-    <h1>You Forgot to search</h1>
+            {% for post in posts %}
 
-{% endif %}
+                <div class="col">
+                    <div class="card">
+                        <img src="{% if post.image %} {{ post.image.url }} {% endif %}" class="card-img-top" alt="post image">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="{% url 'weblog:post_detail' post.slug %}">{{post.title}}<a/></h5>
+                            <p class="card-text mb-0"><small class="text-muted">Created: {{post.created}}</small></p>
+                            <p class="card-text">{{post.content}}</p>
+                            {% if post.owner == user %}
+                                <a class="btn btn-primary" style="margin-top: 10px;" href="{% url 'weblog:post_edit' post.slug %}">Edit</a>
+                                <a class="btn btn-danger" style="margin-top: 10px;" href="{% url 'weblog:post_delete' post.slug %}">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+            
+        </div>
+
+
+    {% else %}
+
+        <h1>Search Something :D</h1>
+
+    {% endif %}
 
 
 {% endblock content %}

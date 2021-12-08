@@ -34,7 +34,6 @@ urlpatterns = [
     path('tag_edit/<int:id>', tag_edit, name='tag_edit'),
     path('tag_create/', tag_create, name='tag_create'),
 
-    ### unkown stuff
     # password stuff
     path("password_reset/", password_reset_request, name="password_reset"),
     path('new_password/', new_password, name='new_password'),

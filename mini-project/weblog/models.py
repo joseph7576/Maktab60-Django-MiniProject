@@ -63,8 +63,8 @@ class Post(models.Model):
 
     # config managers
     objects = models.Manager()
-    published = PublishedPostsManager()
-    draft = DraftPostsManager()
+    published = PublishedPostsManager() # views - Line 70
+    draft = DraftPostsManager() # not used in this project
 
     def total_likes(self):
         return self.like.count()

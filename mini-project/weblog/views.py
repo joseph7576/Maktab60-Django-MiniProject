@@ -4,9 +4,8 @@ from django.urls import reverse
 from django.contrib import messages
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
-from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from .models import *
+from .models import Post, Comment, Category, Tag
 from .forms import *
 
 
@@ -68,7 +67,7 @@ def dashboard_view(request):
 def search_index(request):
     if request.method == "POST":
         searched = request.POST['searched']
-        posts = Post.objects.filter(Q(title__icontains=searched) | Q(content__icontains=searched))
+        posts = Post.published.filter(Q(title__icontains=searched) | Q(content__icontains=searched))
         context = {'searched': searched, 'posts':posts}
         return render(request, 'weblog/search_index.html', context=context)
     

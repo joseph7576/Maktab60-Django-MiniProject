@@ -2,7 +2,6 @@
 
 {% block title %} Account Register {% endblock title %}
 
-
 {% block content %}
 
     <form class="login100-form" method="post">{% csrf_token %}
@@ -54,6 +53,7 @@
                 Login
             </a>
         </div>
+        
         <div class="text-center mt-1">
             <a href="{% url 'weblog:home' %}" class="txt2 hov1">
                 Back to Homepage
