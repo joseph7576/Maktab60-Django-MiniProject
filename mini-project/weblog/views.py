@@ -132,14 +132,18 @@ def post_stuff(request, slug):
     if 'create_comment' in request.POST:
         form = CommentForm(request.POST)
         if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = Post.objects.get(slug=slug)
-            comment.owner = request.user
-            comment.save()
-            form.save()
-            messages.info(request, f"Comment created successfully.", extra_tags='success')
-            
-            return redirect(reverse('weblog:post_detail',args=[slug]))
+            if form.cleaned_data['text']:
+                comment = form.save(commit=False)
+                comment.post = Post.objects.get(slug=slug)
+                comment.owner = request.user
+                comment.save()
+                form.save()
+                messages.info(request, f"Comment created successfully.", extra_tags='success')
+                
+                return redirect(reverse('weblog:post_detail',args=[slug]))
+            else:
+                messages.error(request, f"You can't comment nothing bro! say something nice in that text area :D", extra_tags='danger')
+
 
 
     elif 'comment_like' in request.POST:
