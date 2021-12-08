@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 
@@ -57,6 +58,7 @@ def register_view(request):
     
     return render(request, 'login/register.html', {'form':form})
 
+@login_required(login_url='weblog:login') 
 def dashboard_view(request):
     user = request.user
     posts = Post.objects.filter(owner=user)
@@ -141,10 +143,9 @@ def post_stuff(request, slug):
                 messages.info(request, f"Comment created successfully.", extra_tags='success')
                 
                 return redirect(reverse('weblog:post_detail',args=[slug]))
+            
             else:
                 messages.error(request, f"You can't comment nothing bro! Say something nice in that text area :D", extra_tags='warning')
-
-
 
     elif 'comment_like' in request.POST:
         comment = get_object_or_404(Comment, id=request.POST.get('comment_like'))
@@ -297,6 +298,21 @@ def password_reset_request(request):
             messages.error(request, 'An invalid email has been entered.', extra_tags="danger")
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="password/password_reset.html", context={"password_reset_form":password_reset_form})
+
+@login_required(login_url='weblog:login')
+def new_password(request):
+    user = request.user
+    form = NewPasswordForm(request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            if user.check_password(form.cleaned_data['password']):
+                user.set_password(form.cleaned_data['password_1'])
+                user.save()
+                messages.success(request,'Your password has been changed successfully.', extra_tags='success')
+                return redirect(reverse('weblog:dashboard'))
+
+    return render(request,'password/new_password.html',{'form':form})
 
 # contact form: https://ordinarycoders.com/blog/article/build-a-django-contact-form-with-email-backend
 def contact(request):

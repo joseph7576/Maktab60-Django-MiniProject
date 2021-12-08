@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from .models import *
 
 # login & registration form
@@ -24,6 +25,22 @@ class RegisterForm(forms.Form):
         super(RegisterForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'input100'
+
+class NewPasswordForm(forms.Form):
+    
+    password = forms.CharField(widget=forms.PasswordInput, label="Old Password")
+    password_1 = forms.CharField(widget=forms.PasswordInput, label="New Password")
+    password_2 = forms.CharField(widget=forms.PasswordInput, label="Confirm New Password")
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password_1 =  cleaned_data.get("password_1")
+        password_2 =  cleaned_data.get("password_2")
+
+        if password_1 != password_2:
+                raise ValidationError(
+                   "New passwords does not match."
+                )
 
 
 # post form

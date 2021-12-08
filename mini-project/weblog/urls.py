@@ -35,9 +35,11 @@ urlpatterns = [
     path('tag_create/', tag_create, name='tag_create'),
 
     ### unkown stuff
-    # password reset
-    path("password_reset", password_reset_request, name="password_reset"),
+    # password stuff
+    path("password_reset/", password_reset_request, name="password_reset"),
+    path('new_password/', new_password, name='new_password'),
+
     # contact form
-    path("contact", contact, name="contact"),
+    path("contact/", contact, name="contact"),
 ]
 
