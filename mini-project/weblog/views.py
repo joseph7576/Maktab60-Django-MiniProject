@@ -142,7 +142,7 @@ def post_stuff(request, slug):
                 
                 return redirect(reverse('weblog:post_detail',args=[slug]))
             else:
-                messages.error(request, f"You can't comment nothing bro! say something nice in that text area :D", extra_tags='danger')
+                messages.error(request, f"You can't comment nothing bro! Say something nice in that text area :D", extra_tags='warning')
 
 
 
