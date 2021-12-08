@@ -8,7 +8,7 @@
     {% for post in posts %}
 
         <div class="card border-secondary mb-3">
-            <img src="{% if post.image %} {{ post.image.url }}{% endif %}" class="card-img-top">
+            <img src="{% if post.image %} {{ post.image.url }} {% endif %}" class="card-img-top">
             <div class="card-body">
                 <h2 class="card-title"><a href="{% url 'weblog:post_detail' post.slug %}">{{post.title}}<a/></h2>
                 <h6 class="card-subtitle mb-2 text-muted">Author: {{post.owner}}</h6>
