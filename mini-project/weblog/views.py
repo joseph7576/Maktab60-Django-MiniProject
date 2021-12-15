@@ -77,7 +77,7 @@ def search_index(request):
 
 ##### post stuff
 def post_list(request):
-    posts = Post.objects.all()
+    posts = Post.published.all()
     context = {'posts': posts}
     return render(request, 'weblog/post/post_list.html', context=context)
 
@@ -144,7 +144,7 @@ def post_stuff(request, slug):
                 return redirect(reverse('weblog:post_detail',args=[slug]))
             
             else:
-                messages.error(request, f"You can't comment nothing bro! Say something nice in that text area :D", extra_tags='warning')
+                messages.error(request, f"You can't comment \"nothing\" bro! Say something nice in that text area :D", extra_tags='warning')
 
     elif 'comment_like' in request.POST:
         comment = get_object_or_404(Comment, id=request.POST.get('comment_like'))

@@ -63,7 +63,7 @@ class Post(models.Model):
 
     # config managers
     objects = models.Manager()
-    published = PublishedPostsManager() # views - Line 70
+    published = PublishedPostsManager() # views - Line 70 & 80
     draft = DraftPostsManager() # not used in this project
 
     def total_likes(self):
@@ -76,7 +76,7 @@ class Post(models.Model):
         return self.title
 
 ### create unique slug for post
-# TODO: search about pre_save & Django Signals
+# TODO search about pre_save & Django Signals
 def pre_save_receiver(sender, instance, *args, **kwargs): 
    if not instance.slug: 
        instance.slug = unique_slug_generator(instance) 
